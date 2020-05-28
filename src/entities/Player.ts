@@ -1,14 +1,11 @@
 import {Directions} from "../interfaces/Directions";
 import {Coords} from "../interfaces/Coords";
-import KeyboardPlugin = Phaser.Input.Keyboard.KeyboardPlugin;
-import Key = Phaser.Input.Keyboard.Key;
+import * as Config from './../GameConfig';
 import Scene = Phaser.Scene;
-import Rectangle = Phaser.Geom.Rectangle;
+import Rectangle = Phaser.GameObjects.Rectangle;
 
 export default class Player {
-    private blocks: any[] = [];
-    private maxBlockSize: number = 1;
-    private blockSize: number = 0;
+    private blocks: Rectangle[] = [];
     private scene: Scene;
     private currentDirection: Directions;
     private justEaten: boolean = false;
@@ -17,27 +14,17 @@ export default class Player {
         return this._isDed;
     }
 
-    private fieldWidth: number;
-    private fieldHeight: number;
-
-    constructor(scene: Scene, blockSize: number, fieldWidth: number, fieldHeight: number) {
-        this.blockSize = blockSize;
+    constructor(scene: Scene) {
         this.scene = scene;
         this.currentDirection = Directions.UP;
-        this.fieldWidth = fieldWidth;
-        this.fieldHeight = fieldHeight;
     }
 
     eat() {
         this.justEaten = true;
     }
 
-    increaseMaxBlockSize () {
-        this.maxBlockSize++;
-    }
-
     addNewBlock(coords: Coords) {
-        const block = this.scene.add.rectangle(coords.x, coords.y, this.blockSize, this.blockSize, 0xffffff);
+        const block = this.scene.add.rectangle(coords.x, coords.y, Config.blockSize, Config.blockSize, 0xffffff);
         this.blocks.unshift(block);
     }
 
@@ -60,27 +47,29 @@ export default class Player {
     }
 
     move() {
-        let currentFront = this.blocks[0];
-        const newCoords = {x: 0, y: 0}
-        if (Directions.UP === this.currentDirection) {
-            newCoords.x = currentFront.x;
-            newCoords.y = currentFront.y - this.blockSize;
-        } else if (Directions.DOWN === this.currentDirection) {
-            newCoords.x = currentFront.x;
-            newCoords.y = currentFront.y + this.blockSize;
-        } else if (Directions.LEFT === this.currentDirection) {
-            newCoords.x = currentFront.x - this.blockSize;
-            newCoords.y = currentFront.y;
-        } else if (Directions.RIGHT === this.currentDirection) {
-            newCoords.x = currentFront.x + this.blockSize;
-            newCoords.y = currentFront.y;
+        const newCoords = {...this.blocks[0]};
+
+        switch(this.currentDirection) {
+            case Directions.UP:
+                newCoords.y -= Config.blockSize;
+                break;
+            case Directions.DOWN:
+                newCoords.y += Config.blockSize;
+                break;
+            case Directions.LEFT:
+                newCoords.x -= Config.blockSize;
+                break;
+            case Directions.RIGHT:
+                newCoords.x += Config.blockSize;
+                break;
         }
 
         if (this.checkIfDead(newCoords)) {
             this._isDed = true;
             return;
         }
-        let block = this.scene.add.rectangle(newCoords.x, newCoords.y, this.blockSize, this.blockSize, 0xffffff);
+
+        let block = this.scene.add.rectangle(newCoords.x, newCoords.y, Config.blockSize, Config.blockSize, 0xffffff);
         this.blocks.unshift(block);
 
         if (!this.justEaten) {
@@ -92,8 +81,8 @@ export default class Player {
     }
 
     checkIfDead(nextCoords: Coords): boolean {
-        if (nextCoords.x < this.blockSize / 2 || nextCoords.x > this.fieldWidth - this.blockSize / 2
-            || nextCoords.y < this.blockSize / 2 || nextCoords.y > this.fieldHeight - this.blockSize / 2) {
+        if (nextCoords.x < Config.blockSize / 2 || nextCoords.x > Config.width - Config.blockSize / 2
+            || nextCoords.y < Config.blockSize / 2 || nextCoords.y > Config.height - Config.blockSize / 2) {
             return true;
         }
 

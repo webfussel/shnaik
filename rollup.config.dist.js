@@ -8,7 +8,7 @@ export default {
 
     //  Our games entry point (edit as required)
     input: [
-        './src/shnaik.ts'
+        './src/Shnaik.ts'
     ],
 
     //  Where the build file is to be generated.

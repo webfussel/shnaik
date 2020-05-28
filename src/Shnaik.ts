@@ -9,14 +9,10 @@ import firebaseConfig from '../firebase.config.js';
 import Graphics = Phaser.GameObjects.Graphics;
 import TimerEvent = Phaser.Time.TimerEvent;
 import Key = Phaser.Input.Keyboard.Key;
+import * as Config from './GameConfig';
 
 export default class Shnaik extends Phaser.Scene
 {
-    static blockSize: number = 20;
-    static offset: number = 30;
-    static width: number = Shnaik.blockSize * Shnaik.offset;
-    static height: number = Shnaik.blockSize * Shnaik.offset;
-
     timePlayedEvent: TimerEvent;
     moveEvent: TimerEvent;
     moveEventConfig: any = {
@@ -35,6 +31,9 @@ export default class Shnaik extends Phaser.Scene
     leftKey: Key;
     rightKey: Key;
     swipeDirection: Directions;
+
+    scoreContainer: HTMLElement = document.querySelector('.score span')
+    timePlayedContainer: HTMLElement = document.querySelector('.time span');
 
     constructor ()
     {
@@ -56,11 +55,11 @@ export default class Shnaik extends Phaser.Scene
         })
 
 
-        this.player = new Player(this, Shnaik.blockSize, Shnaik.width, Shnaik.height);
+        this.player = new Player(this);
         this.player.addNewBlock(this.getMiddleOfMap());
         this.player.changeDirection(Directions.UP);
 
-        this.food = new Food(this, this.getRandomCoords(), Shnaik.blockSize);
+        this.food = new Food(this, this.getRandomCoords());
 
         this.moveEvent = this.time.addEvent(this.moveEventConfig)
         this.timePlayedEvent = this.time.addEvent({
@@ -102,19 +101,19 @@ export default class Shnaik extends Phaser.Scene
 
     getRandomCoords(): Coords {
         // Coords are for center, so you have to divide by 2 for a correct position in grid
-        let x = Math.floor(Math.random() * Shnaik.offset) * Shnaik.blockSize - Shnaik.blockSize / 2;
-        let y = Math.floor(Math.random() * Shnaik.offset) * Shnaik.blockSize - Shnaik.blockSize / 2;
+        let x = Math.floor(Math.random() * Config.blockNumber) * Config.blockSize - Config.blockSize / 2;
+        let y = Math.floor(Math.random() * Config.blockNumber) * Config.blockSize - Config.blockSize / 2;
 
-        x = x < Shnaik.blockSize / 2 ? Shnaik.blockSize / 2 : x;
-        y = y < Shnaik.blockSize / 2 ? Shnaik.blockSize / 2 : y;
+        x = x < Config.blockSize / 2 ? Config.blockSize / 2 : x;
+        y = y < Config.blockSize / 2 ? Config.blockSize / 2 : y;
 
         return {x, y};
     }
 
     getMiddleOfMap(): Coords {
         // Coords are for center, so you have to divide by 2 for a correct position in grid
-        const x = (Shnaik.offset / 2) * Shnaik.blockSize - Shnaik.blockSize / 2;
-        const y = (Shnaik.offset / 2) * Shnaik.blockSize - Shnaik.blockSize / 2;
+        const x = (Config.blockNumber / 2) * Config.blockSize - Config.blockSize / 2;
+        const y = (Config.blockNumber / 2) * Config.blockSize - Config.blockSize / 2;
         return {x, y};
     }
 
@@ -161,36 +160,44 @@ export default class Shnaik extends Phaser.Scene
         }
 
         if (this.player.isDed) {
-            this.moveEvent.destroy();
-            this.timePlayedEvent.destroy();
             this.makeDed();
         }
     }
 
     addPoints() {
         this.score++;
-        document.querySelector('.score span').innerHTML = this.score + '';
+        this.scoreContainer.innerHTML = this.score + '';
     }
 
     addTime() {
         this.timePlayed++;
-        document.querySelector('.time span').innerHTML = this.timePlayed + '';
+        this.timePlayedContainer.innerHTML = this.timePlayed + '';
     }
 
     makeDed() {
-        const overlay = this.add.renderTexture(0, 0, Shnaik.width, Shnaik.height);
-        overlay.fill(0x000000, 0.1);
-        const text = this.add.text(0, 0, 'is ded =(');
-        Phaser.Display.Align.In.Center(text, overlay);
+        this.moveEvent.destroy();
+        this.timePlayedEvent.destroy();
+        const overlay = this.add.renderTexture(0, 0, Config.width, Config.height);
+        overlay.fill(0x000000, 0.8);
+        const dedText = this.add.text(0, 0, 'is ded =(\nRetry?', {align: 'center'})
+            .setInteractive()
+            .on('pointerdown', () => {
+                this.score = -1;
+                this.timePlayed = -1;
+                this.addPoints();
+                this.addTime();
+                this.scene.restart()
+            }, true)
 
+        Phaser.Display.Align.In.Center(dedText, overlay);
     }
 }
 
 const config = {
     type: Phaser.AUTO,
     backgroundColor: '#125555',
-    width: Shnaik.width,
-    height: Shnaik.height,
+    width: Config.width,
+    height: Config.height,
     scene: Shnaik,
     parent: 'shnaik'
 };

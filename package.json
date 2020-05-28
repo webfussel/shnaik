@@ -2,7 +2,7 @@
     "name": "shnaik",
     "version": "0.0.3",
     "description": "A simple snake game",
-    "main": "src/shnaik.ts",
+    "main": "src/Shnaik.ts",
     "scripts": {
         "dev": "rollup --config rollup.config.dev.js",
         "build": "rollup --config rollup.config.dist.js",
