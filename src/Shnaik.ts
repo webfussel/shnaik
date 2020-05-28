@@ -6,7 +6,6 @@ import {Coords} from "./interfaces/Coords";
 import firebase from 'firebase/app';
 import 'firebase/analytics';
 import firebaseConfig from '../firebase.config.js';
-import Graphics = Phaser.GameObjects.Graphics;
 import TimerEvent = Phaser.Time.TimerEvent;
 import Key = Phaser.Input.Keyboard.Key;
 import * as Config from './GameConfig';

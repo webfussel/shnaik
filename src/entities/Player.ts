@@ -8,6 +8,7 @@ export default class Player {
     private blocks: Rectangle[] = [];
     private scene: Scene;
     private currentDirection: Directions;
+    private nextDirection: Directions;
     private justEaten: boolean = false;
     private _isDed: boolean = false;
     get isDed(): boolean {
@@ -17,6 +18,7 @@ export default class Player {
     constructor(scene: Scene) {
         this.scene = scene;
         this.currentDirection = Directions.UP;
+        this.nextDirection = Directions.UP;
     }
 
     eat() {
@@ -36,17 +38,18 @@ export default class Player {
         if (direction !== this.currentDirection) {
             if (this.currentDirection === Directions.UP || this.currentDirection === Directions.DOWN) {
                 if (direction === Directions.LEFT || direction === Directions.RIGHT) {
-                    this.currentDirection = direction;
+                    this.nextDirection = direction;
                 }
             } else if (this.currentDirection === Directions.LEFT || this.currentDirection === Directions.RIGHT) {
                 if (direction === Directions.UP || direction === Directions.DOWN) {
-                    this.currentDirection = direction;
+                    this.nextDirection = direction;
                 }
             }
         }
     }
 
     move() {
+        this.currentDirection = this.nextDirection;
         const newCoords = {...this.blocks[0]};
 
         switch(this.currentDirection) {
