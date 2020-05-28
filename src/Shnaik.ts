@@ -44,17 +44,6 @@ export default class Shnaik extends Phaser.Scene
 
     create ()
     {
-        const graphics: Graphics = this.add.graphics({
-            lineStyle: {
-                width: 1,
-                color: 0xffffff
-            },
-            fillStyle: {
-                color: 0xffffff
-            }
-        })
-
-
         this.player = new Player(this);
         this.player.addNewBlock(this.getMiddleOfMap());
         this.player.changeDirection(Directions.UP);
