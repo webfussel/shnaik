@@ -149,6 +149,7 @@ export default class Shnaik extends Phaser.Scene
 
         if (this.player.isDed) {
             this.makeDed();
+            this.player.isDed = false;
         }
     }
 

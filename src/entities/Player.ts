@@ -14,6 +14,9 @@ export default class Player {
     get isDed(): boolean {
         return this._isDed;
     }
+    set isDed(ded: boolean) {
+        this._isDed = ded;
+    }
 
     constructor(scene: Scene) {
         this.scene = scene;
@@ -88,6 +91,8 @@ export default class Player {
             || nextCoords.y < Config.blockSize / 2 || nextCoords.y > Config.height - Config.blockSize / 2) {
             return true;
         }
+
+
 
         for (const block of this.getCurrentBlocks()) {
             if (nextCoords.x === block.x && nextCoords.y === block.y) {
