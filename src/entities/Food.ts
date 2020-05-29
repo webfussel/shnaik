@@ -1,6 +1,6 @@
 import {Coords} from "../interfaces/Coords";
 import Scene = Phaser.Scene;
-import * as Config from './../GameConfig';
+import {MAIN_GAME_CONFIG} from './../GameConfig';
 
 export default class Food {
     private block: any;
@@ -9,7 +9,7 @@ export default class Food {
 
     constructor(scene: Scene, coords: Coords) {
         this.scene = scene;
-        this.block = scene.add.rectangle(coords.x, coords.y, Config.blockSize, Config.blockSize, 0x00aa00);
+        this.block = scene.add.rectangle(coords.x, coords.y, MAIN_GAME_CONFIG.blockSize, MAIN_GAME_CONFIG.blockSize, 0x00aa00);
         this.currentCoords = coords;
     }
 

@@ -1,6 +1,6 @@
 import {Directions} from "../interfaces/Directions";
 import {Coords} from "../interfaces/Coords";
-import * as Config from './../GameConfig';
+import {MAIN_GAME_CONFIG} from '../GameConfig';
 import Scene = Phaser.Scene;
 import Rectangle = Phaser.GameObjects.Rectangle;
 
@@ -29,7 +29,7 @@ export default class Player {
     }
 
     addNewBlock(coords: Coords) {
-        const block = this.scene.add.rectangle(coords.x, coords.y, Config.blockSize, Config.blockSize, 0xffffff);
+        const block = this.scene.add.rectangle(coords.x, coords.y, MAIN_GAME_CONFIG.blockSize, MAIN_GAME_CONFIG.blockSize, 0xffffff);
         this.blocks.unshift(block);
     }
 
@@ -57,16 +57,16 @@ export default class Player {
 
         switch(this.currentDirection) {
             case Directions.UP:
-                newCoords.y -= Config.blockSize;
+                newCoords.y -= MAIN_GAME_CONFIG.blockSize;
                 break;
             case Directions.DOWN:
-                newCoords.y += Config.blockSize;
+                newCoords.y += MAIN_GAME_CONFIG.blockSize;
                 break;
             case Directions.LEFT:
-                newCoords.x -= Config.blockSize;
+                newCoords.x -= MAIN_GAME_CONFIG.blockSize;
                 break;
             case Directions.RIGHT:
-                newCoords.x += Config.blockSize;
+                newCoords.x += MAIN_GAME_CONFIG.blockSize;
                 break;
         }
 
@@ -75,7 +75,7 @@ export default class Player {
             return;
         }
 
-        let block = this.scene.add.rectangle(newCoords.x, newCoords.y, Config.blockSize, Config.blockSize, 0xffffff);
+        let block = this.scene.add.rectangle(newCoords.x, newCoords.y, MAIN_GAME_CONFIG.blockSize, MAIN_GAME_CONFIG.blockSize, 0xffffff);
         this.blocks.unshift(block);
 
         if (!this.justEaten) {
@@ -87,8 +87,8 @@ export default class Player {
     }
 
     checkIfDead(nextCoords: Coords): boolean {
-        if (nextCoords.x < Config.blockSize / 2 || nextCoords.x > Config.width - Config.blockSize / 2
-            || nextCoords.y < Config.blockSize / 2 || nextCoords.y > Config.height - Config.blockSize / 2) {
+        if (nextCoords.x < MAIN_GAME_CONFIG.blockSize / 2 || nextCoords.x > MAIN_GAME_CONFIG.width() - MAIN_GAME_CONFIG.blockSize / 2
+            || nextCoords.y < MAIN_GAME_CONFIG.blockSize / 2 || nextCoords.y > MAIN_GAME_CONFIG.height() - MAIN_GAME_CONFIG.blockSize / 2) {
             return true;
         }
 
