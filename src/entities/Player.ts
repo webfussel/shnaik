@@ -75,8 +75,7 @@ export default class Player {
             return;
         }
 
-        let block = this.scene.add.rectangle(newCoords.x, newCoords.y, MAIN_GAME_CONFIG.blockSize, MAIN_GAME_CONFIG.blockSize, 0xffffff);
-        this.blocks.unshift(block);
+        this.addNewBlock(newCoords);
 
         if (!this.justEaten) {
             const deleteMe = this.blocks.pop();
@@ -91,8 +90,6 @@ export default class Player {
             || nextCoords.y < MAIN_GAME_CONFIG.blockSize / 2 || nextCoords.y > MAIN_GAME_CONFIG.height() - MAIN_GAME_CONFIG.blockSize / 2) {
             return true;
         }
-
-
 
         for (const block of this.getCurrentBlocks()) {
             if (nextCoords.x === block.x && nextCoords.y === block.y) {

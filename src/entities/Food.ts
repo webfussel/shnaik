@@ -1,6 +1,6 @@
 import {Coords} from "../interfaces/Coords";
 import Scene = Phaser.Scene;
-import {MAIN_GAME_CONFIG} from './../GameConfig';
+import {MAIN_GAME_CONFIG} from '../GameConfig';
 
 export default class Food {
     private block: any;
